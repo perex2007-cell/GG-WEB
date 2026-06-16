@@ -3,7 +3,7 @@ export default function Hero() {
     <section id="hero" className="relative min-h-[90vh] flex items-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img
-          alt="ConstructPro Hero"
+          alt="G&G Hero"
           className="w-full h-full object-cover"
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYo3ctFUQAlUhgg7YJpNEy66IXvIGfWcCNIGBMO22dZ-QJ8HR2bCfU_SfEI3i64rGFwtlW39OCJUDk8E6Ucja5kvryaO7eb_YB6sp-YqRILE0Q7heeAhGW_xh82XGGGUDdGwS2vVGFqouJl4xrSWYeQyR_cVuaJ_jTUih0bruzEctWUI8-HrQKuxazWsoIRaB4RWbmWPvSzCcCBWnCMwMd7-jdQbY7ZltcRFreazsbNI-y5cXcO_em4LbC4IZEEVZT6hC9oTlzFpk"
         />
