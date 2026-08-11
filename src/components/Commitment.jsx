@@ -39,13 +39,29 @@ export default function Commitment() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
           <div>
             <h2 className="font-headline-lg text-headline-lg mb-md text-on-primary-container">Nuestro Compromiso SST</h2>
-            <p className="font-body-lg text-body-lg text-on-primary-container/80 mb-lg">
-              En G&G, la seguridad no es un requisito, es nuestro valor fundamental. Protegemos el capital más valioso de su empresa: las personas.
-            </p>
             <div className="space-y-md">
-              {commitments.map((commitment) => (
-                <CommitmentItem key={commitment.title} {...commitment} />
-              ))}
+              <p className="font-body-lg text-body-lg text-on-primary-container/80">
+                En G&G, la seguridad no es un requisito, es nuestro valor fundamental. Protegemos el capital más valioso de su empresa: las personas.
+              </p>
+              <div className="space-y-md">
+                {commitments.map((commitment) => (
+                  <CommitmentItem key={commitment.title} {...commitment} />
+                ))}
+              </div>
+              <div className="mt-lg">
+                <button
+                  type="button"
+                  className="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white px-lg py-sm rounded-lg font-headline-sm text-headline-sm text-center hover:bg-white/20 transition-all"
+                  onClick={() => {
+                    const target = document.getElementById('contacto');
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
+                  Ver más
+                </button>
+              </div>
             </div>
           </div>
           <div className="relative">
