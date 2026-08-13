@@ -10,6 +10,7 @@ const navItems = [
 
 export default function Header() {
   const [activeSection, setActiveSection] = useState('hero');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.id);
@@ -58,6 +59,8 @@ export default function Header() {
     };
   }, []);
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header className="fixed top-0 w-full z-50 bg-primary shadow-md shadow-primary/10">
       <div className="flex items-center justify-between px-md h-16 max-w-container-max mx-auto text-on-primary">
@@ -67,6 +70,7 @@ export default function Header() {
           </span>
           <span className="font-headline-md text-headline-md font-bold tracking-tight">G&G</span>
         </div>
+
         <div className="hidden md:flex items-center gap-md">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
@@ -91,10 +95,41 @@ export default function Header() {
             Solicitar Cotización
           </a>
         </div>
-        <button className="md:hidden p-xs active:scale-95 transition-transform" type="button">
-          <span className="material-symbols-outlined">menu</span>
+
+        <button
+          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
+          className="md:hidden p-xs active:scale-95 transition-transform"
+          type="button"
+          onClick={() => setMenuOpen((value) => !value)}
+        >
+          <span className="material-symbols-outlined">{menuOpen ? 'close' : 'menu'}</span>
         </button>
       </div>
+
+      {menuOpen && (
+        <nav id="mobile-menu" aria-label="Menú móvil" className="md:hidden border-t border-white/10 bg-primary">
+          <div className="px-md py-sm space-y-sm">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={closeMenu}
+                className="block font-body-sm text-body-sm text-on-primary opacity-90 hover:opacity-100"
+              >
+                {item.label}
+              </a>
+            ))}
+            <a href="#consultar-proyecto" onClick={closeMenu} className="block font-body-sm text-body-sm text-on-primary opacity-90 hover:opacity-100">
+              Consultar Proyecto
+            </a>
+            <a href="#contacto" onClick={closeMenu} className="block bg-industrial-orange text-white px-md py-sm rounded-lg text-center font-label-caps text-label-caps">
+              Solicitar Cotización
+            </a>
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

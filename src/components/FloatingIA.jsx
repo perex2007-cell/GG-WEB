@@ -12,15 +12,21 @@ export default function FloatingIA() {
               <span className="material-symbols-outlined">smart_toy</span>
               <strong>Asistente IA</strong>
             </div>
-            <button onClick={() => setOpen(false)} className="text-white opacity-90 hover:opacity-100">
+            <button
+              onClick={() => setOpen(false)}
+              className="text-white opacity-90 hover:opacity-100"
+              aria-label="Cerrar asistente IA"
+              type="button"
+            >
               ✕
             </button>
           </div>
           <div className="p-3 text-sm text-on-surface">
             <p>Hola — soy el asistente virtual. Escribe tu pregunta y te ayudaré.</p>
             <div className="mt-3">
-              <input placeholder="Escribe aquí..." className="w-full rounded-md border p-2 text-sm" />
-              <button className="mt-2 w-full bg-industrial-orange text-white py-2 rounded-md">Enviar</button>
+              <label htmlFor="assistant-message" className="sr-only">mensaje del asistente IA</label>
+              <input id="assistant-message" placeholder="Escribe aquí..." className="w-full rounded-md border p-2 text-sm" aria-label="Escribe tu mensaje al asistente IA" />
+              <button type="button" className="mt-2 w-full bg-industrial-orange text-white py-2 rounded-md">Enviar</button>
             </div>
           </div>
         </div>
@@ -29,7 +35,8 @@ export default function FloatingIA() {
       <button
         onClick={() => setOpen((s) => !s)}
         className="bg-primary text-white p-3 rounded-full shadow-lg hover:scale-105 transition-transform flex items-center gap-2"
-        aria-label="Abrir asistente IA"
+        aria-label={open ? 'Cerrar asistente IA' : 'Abrir asistente IA'}
+        type="button"
       >
         <span className="material-symbols-outlined">smart_toy</span>
       </button>
