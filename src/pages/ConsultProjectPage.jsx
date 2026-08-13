@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import { findProjectByCode } from '../data/projectCatalog';
+import { findTrackingProjectByCode } from '../data/projectsTracking';
 
 const defaultCode = 'GG-2026-00125';
 
 export default function ConsultProjectPage() {
   const [projectCode, setProjectCode] = useState(defaultCode);
   const [result, setResult] = useState(() => findProjectByCode(defaultCode));
+  const [trackingResult, setTrackingResult] = useState(() => findTrackingProjectByCode(defaultCode));
   const [searched, setSearched] = useState(false);
 
   const statusMessage = useMemo(() => {
@@ -23,7 +25,9 @@ export default function ConsultProjectPage() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const project = findProjectByCode(projectCode);
+    const tracking = findTrackingProjectByCode(projectCode);
     setResult(project);
+    setTrackingResult(tracking);
     setSearched(true);
   };
 
@@ -108,6 +112,38 @@ export default function ConsultProjectPage() {
             )}
           </div>
         </div>
+
+        {trackingResult && (
+          <div className="mt-lg rounded-2xl border border-surface-variant bg-surface p-md shadow-sm">
+            <div className="mb-md flex items-center justify-between gap-sm">
+              <div>
+                <p className="font-label-caps text-label-caps uppercase text-secondary">Avance real</p>
+                <h3 className="font-headline-md text-headline-md text-primary">{trackingResult.name}</h3>
+              </div>
+              <span className="rounded-full bg-primary px-sm py-xs font-label-caps text-label-caps text-on-primary">
+                {trackingResult.progress}%
+              </span>
+            </div>
+
+            <div className="mb-md h-3 w-full overflow-hidden rounded-full bg-surface-variant">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary to-industrial-orange transition-all duration-500"
+                style={{ width: `${trackingResult.progress}%` }}
+              />
+            </div>
+
+            <div className="grid gap-sm sm:grid-cols-2 lg:grid-cols-4">
+              {trackingResult.photos.map((photo, index) => (
+                <img
+                  key={`${trackingResult.code}-${index}`}
+                  src={photo}
+                  alt={`${trackingResult.name} foto ${index + 1}`}
+                  className="h-36 w-full rounded-xl object-cover shadow-sm"
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

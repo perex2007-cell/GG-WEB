@@ -6,13 +6,17 @@ import ServicesPage from './pages/ServicesPage';
 import GestionSSTPage from './pages/GestionSSTPage';
 import ProjectsPage from './pages/ProjectsPage';
 import ConsultProjectPage from './pages/ConsultProjectPage';
+import RiskExplorer from './components/RiskExplorer';
+import AdminFaqPage from './pages/AdminFaqPage';
 
 const routes = {
   '': AppShell,
   'servicios': ServicesPage,
   'gestion-sst': GestionSSTPage,
+  'risk-explorer': RiskExplorer,
   'proyectos': ProjectsPage,
   'consultar-proyecto': ConsultProjectPage,
+  'admin-faq': AdminFaqPage,
 };
 
 function Layout({ children, showFooter = true }) {

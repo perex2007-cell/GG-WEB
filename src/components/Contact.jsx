@@ -14,21 +14,49 @@ export default function Contact() {
   const [formData, setFormData] = useState(initialForm);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState(1);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleStep1Submit = (event) => {
+    event.preventDefault();
+
+    const { name } = formData;
+    const hasEmail = formData.email.trim();
+    const hasPhone = formData.phone.trim();
+
+    if (!name.trim() || (!hasEmail && !hasPhone)) {
+      setStatus({
+        type: 'error',
+        message: 'Por favor, completa tu nombre y al menos un dato de contacto (correo o teléfono).',
+      });
+      return;
+    }
+
+    setStatus({ type: '', message: '' });
+    setStep(2);
+  };
+
+  const handleStep2Submit = async (event) => {
     event.preventDefault();
 
     const { name, email, service, message } = formData;
 
-    if (!name.trim() || !email.trim() || !service || !message.trim()) {
+    if (!service || !message.trim()) {
       setStatus({
         type: 'error',
-        message: 'Completa nombre, correo, servicio y mensaje para enviar tu solicitud.',
+        message: 'Completa el tipo de servicio y tu consulta para enviar la solicitud.',
+      });
+      return;
+    }
+
+    if (!email.trim() && !formData.phone.trim()) {
+      setStatus({
+        type: 'error',
+        message: 'Necesitamos al menos un dato de contacto (correo o teléfono).',
       });
       return;
     }
@@ -55,8 +83,8 @@ export default function Contact() {
         {
           from_name: name,
           company: formData.company || 'Sin empresa',
-          email,
-          phone: formData.phone || 'No especificado',
+          email: email || 'Sin correo',
+          phone: formData.phone || 'Sin teléfono',
           service,
           message,
         },
@@ -68,6 +96,7 @@ export default function Contact() {
         message: 'Tu solicitud se envió correctamente. Nuestro equipo te contactará pronto.',
       });
       setFormData(initialForm);
+      setStep(1);
     } catch (error) {
       console.error('EmailJS error:', error);
       setStatus({
@@ -80,16 +109,18 @@ export default function Contact() {
   };
 
   return (
-    <section className="py-xl px-md" id="contacto">
-      <div className="max-w-container-max mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row border border-surface-variant">
-          <div className="md:w-1/3 bg-primary p-lg text-white">
-            <h2 className="font-headline-lg text-headline-lg mb-md">Inicie su proyecto con expertos</h2>
-            <p className="font-body-md text-body-md text-white/70 mb-lg">Estamos listos para brindarle la solidez técnica y seguridad que su infraestructura requiere.</p>
+    <section className="px-md py-xl" id="contacto">
+      <div className="mx-auto max-w-container-max">
+        <div className="flex flex-col overflow-hidden rounded-2xl border border-surface-variant bg-white shadow-xl md:flex-row">
+          <div className="bg-primary p-lg text-white md:w-1/3">
+            <h2 className="mb-md font-headline-lg text-headline-lg">Inicie su proyecto con expertos</h2>
+            <p className="mb-lg font-body-md text-body-md text-white/70">
+              Estamos listos para brindarle la solidez técnica y seguridad que su infraestructura requiere.
+            </p>
             <div className="space-y-sm">
               <div className="flex items-center gap-sm">
-                <span className="material-symbols-outlined text-industrial-orange">call</span>
-                <span className="font-body-sm text-body-sm">+57 (601) 555-0123</span>
+                <span className="material-symbols-outlined text-industrial-orange">phone</span>
+                <span className="font-body-sm text-body-sm">+57 (1) 234 5678</span>
               </div>
               <div className="flex items-center gap-sm">
                 <span className="material-symbols-outlined text-industrial-orange">mail</span>
@@ -102,110 +133,165 @@ export default function Contact() {
             </div>
             <div className="mt-xl">
               <span className="font-label-caps text-label-caps uppercase text-industrial-orange">SST Compliance Certified</span>
-              <div className="flex gap-xs mt-sm opacity-50" aria-hidden="true">
-                <div className="w-8 h-8 rounded bg-white" />
-                <div className="w-8 h-8 rounded bg-white" />
-                <div className="w-8 h-8 rounded bg-white" />
+              <div className="mt-sm flex gap-xs opacity-50" aria-hidden="true">
+                <div className="h-8 w-8 rounded bg-white" />
+                <div className="h-8 w-8 rounded bg-white" />
+                <div className="h-8 w-8 rounded bg-white" />
               </div>
             </div>
           </div>
-          <div className="md:w-2/3 p-lg">
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-md">
-              <div>
-                <label htmlFor="contact-name" className="block font-label-caps text-label-caps text-primary mb-xs">Nombre</label>
-                <input
-                  id="contact-name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border-2 border-outline-variant focus:border-primary-container focus:ring-0 transition-colors p-sm"
-                  placeholder="Su nombre completo"
-                  type="text"
-                />
+
+          <div className="p-lg md:w-2/3">
+            {/* Indicador de pasos */}
+            <div className="mb-lg flex items-center gap-sm">
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full font-headline-sm transition-all ${
+                  step >= 1 ? 'bg-primary text-white' : 'bg-surface-variant text-secondary'
+                }`}
+              >
+                1
               </div>
-              <div>
-                <label htmlFor="contact-company" className="block font-label-caps text-label-caps text-primary mb-xs">Empresa</label>
-                <input
-                  id="contact-company"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border-2 border-outline-variant focus:border-primary-container focus:ring-0 transition-colors p-sm"
-                  placeholder="Nombre de la compañía"
-                  type="text"
-                />
+              <div className={`h-1 flex-1 transition-all ${step >= 2 ? 'bg-primary' : 'bg-surface-variant'}`} />
+              <div
+                className={`flex h-8 w-8 items-center justify-center rounded-full font-headline-sm transition-all ${
+                  step >= 2 ? 'bg-primary text-white' : 'bg-surface-variant text-secondary'
+                }`}
+              >
+                2
               </div>
-              <div>
-                <label htmlFor="contact-email" className="block font-label-caps text-label-caps text-primary mb-xs">Correo</label>
-                <input
-                  id="contact-email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border-2 border-outline-variant focus:border-primary-container focus:ring-0 transition-colors p-sm"
-                  placeholder="email@empresa.com"
-                  type="email"
-                />
+            </div>
+
+            {status.message && (
+              <div
+                className={`mb-md rounded-lg px-md py-sm ${
+                  status.type === 'error' ? 'bg-error/10 text-error' : 'bg-green-500/10 text-green-700'
+                } font-body-sm text-body-sm`}
+              >
+                {status.message}
               </div>
-              <div>
-                <label htmlFor="contact-phone" className="block font-label-caps text-label-caps text-primary mb-xs">Teléfono</label>
-                <input
-                  id="contact-phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border-2 border-outline-variant focus:border-primary-container focus:ring-0 transition-colors p-sm"
-                  placeholder="+57 300 000 0000"
-                  type="tel"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label htmlFor="contact-service" className="block font-label-caps text-label-caps text-primary mb-xs">Tipo de Servicio</label>
-                <select
-                  id="contact-service"
-                  name="service"
-                  value={formData.service}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border-2 border-outline-variant focus:border-primary-container focus:ring-0 transition-colors p-sm"
-                >
-                  <option value="">Seleccione un servicio</option>
-                  <option value="Obra Civil">Obra Civil</option>
-                  <option value="Consultoría SST">Consultoría SST</option>
-                  <option value="Interventoría Técnica">Interventoría Técnica</option>
-                  <option value="Capacitación Integral">Capacitación Integral</option>
-                </select>
-              </div>
-              <div className="md:col-span-2">
-                <label htmlFor="contact-message" className="block font-label-caps text-label-caps text-primary mb-xs">Mensaje</label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border-2 border-outline-variant focus:border-primary-container focus:ring-0 transition-colors p-sm"
-                  placeholder="Cuéntenos sobre su proyecto o necesidad técnica..."
-                  rows={4}
-                />
-              </div>
-              <div className="md:col-span-2">
+            )}
+
+            {/* PASO 1: Contacto rápido */}
+            {step === 1 && (
+              <form onSubmit={handleStep1Submit} className="space-y-md">
+                <div>
+                  <label htmlFor="contact-name" className="mb-xs block font-label-caps text-label-caps text-primary">
+                    Nombre
+                  </label>
+                  <input
+                    id="contact-name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border-2 border-outline-variant p-sm transition-colors focus:border-primary-container focus:ring-0"
+                    placeholder="Tu nombre completo"
+                    type="text"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-email" className="mb-xs block font-label-caps text-label-caps text-primary">
+                    Correo
+                  </label>
+                  <input
+                    id="contact-email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border-2 border-outline-variant p-sm transition-colors focus:border-primary-container focus:ring-0"
+                    placeholder="email@empresa.com (opcional)"
+                    type="email"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-phone" className="mb-xs block font-label-caps text-label-caps text-primary">
+                    Teléfono
+                  </label>
+                  <input
+                    id="contact-phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border-2 border-outline-variant p-sm transition-colors focus:border-primary-container focus:ring-0"
+                    placeholder="+57 300 000 0000 (opcional)"
+                    type="tel"
+                  />
+                </div>
                 <button
-                  className="w-full bg-primary text-white font-headline-sm text-headline-sm py-sm rounded-lg hover:bg-primary-container transition-colors flex items-center justify-center gap-xs disabled:opacity-70"
                   type="submit"
-                  disabled={isSubmitting}
+                  className="w-full rounded-lg bg-primary py-sm font-headline-sm text-headline-sm text-white transition-colors hover:bg-primary-container"
                 >
-                  {isSubmitting ? 'Enviando...' : 'Enviar Solicitud'}
-                  <span className="material-symbols-outlined">send</span>
+                  Continuar
                 </button>
-                {status.message && (
-                  <p
-                    className={`mt-3 text-sm ${status.type === 'error' ? 'text-red-600' : 'text-green-700'}`}
-                    aria-live="polite"
+              </form>
+            )}
+
+            {/* PASO 2: Detalles y mensaje */}
+            {step === 2 && (
+              <form onSubmit={handleStep2Submit} className="space-y-md">
+                <div>
+                  <label htmlFor="contact-company" className="mb-xs block font-label-caps text-label-caps text-primary">
+                    Empresa (opcional)
+                  </label>
+                  <input
+                    id="contact-company"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border-2 border-outline-variant p-sm transition-colors focus:border-primary-container focus:ring-0"
+                    placeholder="Nombre de tu compañía"
+                    type="text"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-service" className="mb-xs block font-label-caps text-label-caps text-primary">
+                    Tipo de Servicio
+                  </label>
+                  <select
+                    id="contact-service"
+                    name="service"
+                    value={formData.service}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border-2 border-outline-variant p-sm transition-colors focus:border-primary-container focus:ring-0"
                   >
-                    {status.message}
-                  </p>
-                )}
-              </div>
-            </form>
+                    <option value="">Selecciona un servicio</option>
+                    <option value="Obra Civil">Obra Civil</option>
+                    <option value="Consultoría SST">Consultoría SST</option>
+                    <option value="Interventoría Técnica">Interventoría Técnica</option>
+                    <option value="Capacitación Integral">Capacitación Integral</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="contact-message" className="mb-xs block font-label-caps text-label-caps text-primary">
+                    Tu consulta
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full rounded-lg border-2 border-outline-variant p-sm transition-colors focus:border-primary-container focus:ring-0"
+                    placeholder="Cuéntanos sobre tu proyecto o necesidad..."
+                    rows={4}
+                  />
+                </div>
+                <div className="flex gap-sm">
+                  <button
+                    type="button"
+                    onClick={() => setStep(1)}
+                    className="flex-1 rounded-lg border-2 border-primary bg-transparent py-sm font-headline-sm text-headline-sm text-primary transition-colors hover:bg-primary/5"
+                  >
+                    Atrás
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 rounded-lg bg-industrial-orange py-sm font-headline-sm text-headline-sm text-white transition-colors hover:bg-industrial-orange/90 disabled:opacity-70"
+                  >
+                    {isSubmitting ? 'Enviando...' : 'Enviar Solicitud'}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>

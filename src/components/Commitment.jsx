@@ -16,6 +16,8 @@ const commitments = [
   },
 ];
 
+import LeadMagnet from './LeadMagnet';
+
 function CommitmentItem({ icon, title, description }) {
   return (
     <div className="flex items-start gap-md">
@@ -61,6 +63,12 @@ export default function Commitment() {
                 >
                   Ver más
                 </button>
+              </div>
+
+              {/* Lead Magnet - Descargable EPP */}
+              <div className="mt-xl pt-xl border-t border-white/20">
+                <h3 className="font-headline-sm text-headline-sm text-on-primary-container mb-md">Recurso Gratuito</h3>
+                <LeadMagnet />
               </div>
             </div>
           </div>

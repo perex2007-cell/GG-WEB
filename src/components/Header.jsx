@@ -4,19 +4,30 @@ const navItems = [
   { id: 'hero', label: 'Inicio', href: '#hero' },
   { id: 'servicios', label: 'Servicios', href: '#servicios' },
   { id: 'gestion-sst', label: 'Gestión SST', href: '#gestion-sst' },
+  { id: 'risk-explorer', label: 'Riesgos', href: '#risk-explorer' },
   { id: 'portfolio', label: 'Proyectos', href: '#portfolio' },
   { id: 'contacto', label: 'Contacto', href: '#contacto' },
 ];
 
+const pageRoutes = {
+  'servicios': { label: 'Servicios', parent: 'Inicio' },
+  'gestion-sst': { label: 'Gestión SST', parent: 'Inicio' },
+  'proyectos': { label: 'Proyectos', parent: 'Inicio' },
+  'consultar-proyecto': { label: 'Consultar Proyecto', parent: 'Inicio' },
+  'risk-explorer': { label: 'Explorador de Riesgos', parent: 'Gestión SST' },
+};
+
 export default function Header() {
   const [activeSection, setActiveSection] = useState('hero');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [currentRoute, setCurrentRoute] = useState('');
 
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.id);
 
     const updateActiveSectionFromHash = () => {
       const hash = window.location.hash.replace('#', '');
+      setCurrentRoute(hash);
       if (hash && sectionIds.includes(hash)) {
         setActiveSection(hash);
       }
@@ -61,14 +72,18 @@ export default function Header() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  const isSubPage = pageRoutes[currentRoute];
+
   return (
     <header className="fixed top-0 w-full z-50 bg-primary shadow-md shadow-primary/10">
       <div className="flex items-center justify-between px-md h-16 max-w-container-max mx-auto text-on-primary">
         <div className="flex items-center gap-xs">
-          <span className="material-symbols-outlined text-industrial-orange" style={{ fontSize: 32 }}>
-            foundation
-          </span>
-          <span className="font-headline-md text-headline-md font-bold tracking-tight">G&G</span>
+          <a href="#hero" className="flex items-center gap-xs hover:opacity-80 transition-opacity">
+            <span className="material-symbols-outlined text-industrial-orange" style={{ fontSize: 32 }}>
+              foundation
+            </span>
+            <span className="font-headline-md text-headline-md font-bold tracking-tight">G&G</span>
+          </a>
         </div>
 
         <div className="hidden md:flex items-center gap-md">
@@ -108,6 +123,17 @@ export default function Header() {
         </button>
       </div>
 
+      {/* Breadcrumb para subpáginas */}
+      {isSubPage && (
+        <div className="border-t border-white/10 bg-primary/50 backdrop-blur-sm px-md h-10 flex items-center text-on-primary text-sm max-w-container-max mx-auto">
+          <a href="#hero" className="opacity-70 hover:opacity-100 transition-opacity">
+            {isSubPage.parent}
+          </a>
+          <span className="mx-sm opacity-50">/</span>
+          <span className="opacity-100 font-semibold">{isSubPage.label}</span>
+        </div>
+      )}
+
       {menuOpen && (
         <nav id="mobile-menu" aria-label="Menú móvil" className="md:hidden border-t border-white/10 bg-primary">
           <div className="px-md py-sm space-y-sm">
@@ -121,10 +147,18 @@ export default function Header() {
                 {item.label}
               </a>
             ))}
-            <a href="#consultar-proyecto" onClick={closeMenu} className="block font-body-sm text-body-sm text-on-primary opacity-90 hover:opacity-100">
+            <a
+              href="#consultar-proyecto"
+              onClick={closeMenu}
+              className="block font-body-sm text-body-sm text-on-primary opacity-90 hover:opacity-100"
+            >
               Consultar Proyecto
             </a>
-            <a href="#contacto" onClick={closeMenu} className="block bg-industrial-orange text-white px-md py-sm rounded-lg text-center font-label-caps text-label-caps">
+            <a
+              href="#contacto"
+              onClick={closeMenu}
+              className="block bg-industrial-orange text-white px-md py-xs rounded-lg font-label-caps text-label-caps text-center"
+            >
               Solicitar Cotización
             </a>
           </div>

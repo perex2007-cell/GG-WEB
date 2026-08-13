@@ -85,7 +85,7 @@ export default function GestionSSTPage() {
               <a className="rounded bg-on-tertiary-container px-lg py-sm text-center font-label-caps text-label-caps text-on-primary transition-colors hover:bg-tertiary-container" href="#servicios-sst">
                 Nuestros Servicios
               </a>
-              <a className="rounded border-2 border-primary bg-primary px-lg py-sm text-center font-label-caps text-label-caps text-on-primary transition-colors hover:bg-primary/90" href="#contacto">
+              <a className="rounded border-2 border-primary bg-primary px-lg py-sm text-center font-label-caps text-label-caps text-on-primary transition-colors hover:bg-primary/90" href="#risk-explorer">
                 Consultoría Experta
               </a>
             </div>
@@ -93,11 +93,16 @@ export default function GestionSSTPage() {
         </div>
       </section>
 
-      <section className="bg-surface py-xl">
+      <section id="risk-explorer" className="bg-surface py-xl">
         <div className="mx-auto max-w-container-max px-margin-mobile md:px-md">
-          <div className="mb-lg text-center">
-            <h2 className="font-headline-lg text-headline-lg text-primary">Nuestra Visión de la Prevención</h2>
-            <div className="mx-auto mt-xs h-1 w-20 rounded bg-on-tertiary-container" />
+          <div className="mb-lg flex flex-col gap-sm text-center md:flex-row md:items-end md:justify-between md:text-left">
+            <div>
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.2em] text-industrial-orange">Gestión de riesgos</p>
+              <h2 className="mt-xs font-headline-lg text-headline-lg text-primary">Nuestra Visión de la Prevención</h2>
+            </div>
+            <a className="inline-flex items-center justify-center rounded-full border border-primary bg-primary px-md py-xs font-label-caps text-label-caps text-on-primary hover:bg-primary/90" href="#risk-explorer-link">
+              Explorar riesgos
+            </a>
           </div>
 
           <div className="grid grid-cols-1 gap-sm md:grid-cols-2 lg:grid-cols-4 md:gap-md">

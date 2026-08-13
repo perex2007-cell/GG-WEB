@@ -1,4 +1,5 @@
 import Hero from './Hero';
+import TrustBar from './TrustBar';
 import Services from './Services';
 import Commitment from './Commitment';
 import Portfolio from './Portfolio';
@@ -12,6 +13,7 @@ export default function AppShell() {
     <div className="bg-background text-on-background selection:bg-industrial-orange selection:text-white">
       <main>
         <Hero />
+        <TrustBar />
         <Services />
         <Commitment />
         <Portfolio />
