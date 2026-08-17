@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+
 const services = [
   {
     title: 'Diseño Estructural',
@@ -5,12 +7,14 @@ const services = [
     variant: 'bg-white',
     border: 'industrial-border',
     textClass: 'text-primary',
+    description: 'Cálculos, modelado 3D y diseño de planos estructurales bajo norma NSR-10.'
   },
   {
     title: 'Ejecución de Obras',
     icon: 'construction',
     variant: 'bg-primary',
     textClass: 'text-white',
+    description: 'Construcción y dirección técnica integral de proyectos civiles y comerciales.'
   },
   {
     title: 'Interventoría',
@@ -18,12 +22,14 @@ const services = [
     variant: 'bg-white',
     textClass: 'text-primary',
     borderClass: 'border border-outline-variant',
+    description: 'Supervisión técnica, administrativa y financiera para asegurar calidad y cumplimiento.'
   },
   {
     title: 'Estudios de Suelos',
     icon: 'layers',
     variant: 'bg-surface-container-high',
     textClass: 'text-primary',
+    description: 'Exploración geotécnica y ensayos de laboratorio para cimentaciones seguras.'
   },
 ];
 
@@ -34,6 +40,7 @@ const sstServices = [
     variant: 'bg-white',
     textClass: 'text-primary',
     borderClass: 'border border-outline-variant',
+    description: 'Diseño, ejecución y evaluación del sistema según el Decreto 1072 y Res. 0312.'
   },
   {
     title: 'Auditorías de Riesgo',
@@ -41,12 +48,14 @@ const sstServices = [
     variant: 'bg-white',
     textClass: 'text-primary',
     border: 'industrial-border',
+    description: 'Identificación de peligros, valoración de riesgos e inspecciones de seguridad.'
   },
   {
     title: 'Seguridad en Alturas',
     icon: 'height',
     variant: 'bg-primary',
     textClass: 'text-white',
+    description: 'Planes de protección contra caídas, inspección de equipos y certificación de puntos.'
   },
   {
     title: 'Capacitación Técnica',
@@ -54,17 +63,51 @@ const sstServices = [
     variant: 'bg-white',
     textClass: 'text-primary',
     borderClass: 'border border-outline-variant',
+    description: 'Formación especializada a trabajadores en prevención de riesgos laborales.'
   },
 ];
 
-function ServiceCard({ title, icon, variant, textClass, border, borderClass }) {
+function ServiceCard({ title, icon, variant, textClass, border, borderClass, description }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  // Definimos colores traseros acordes a si la tarjeta es oscura (bg-primary) o clara
+  const isDark = variant === 'bg-primary';
+
   return (
-    <div className={`bento-card ${variant} p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between h-48 group`}>
-      <span className={`material-symbols-outlined ${textClass} group-hover:scale-110 transition-transform`} style={{ fontSize: 40 }}>
-        {icon}
-      </span>
-      <div>
-        <h4 className={`font-headline-sm text-headline-sm ${textClass}`}>{title}</h4>
+    <div 
+      className="h-48 cursor-pointer [perspective:1000px]"
+      onClick={() => setIsFlipped(!isFlipped)}
+    >
+      <div 
+        className={`relative w-full h-full duration-500 [transform-style:preserve-3d] transition-transform ${
+          isFlipped ? '[transform:rotateY(180deg)]' : ''
+        }`}
+      >
+        {/* Cara Frontal */}
+        <div 
+          className={`absolute inset-0 w-full h-full bento-card ${variant} p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between [backface-visibility:hidden] group`}
+        >
+          <span className={`material-symbols-outlined ${textClass} group-hover:scale-110 transition-transform`} style={{ fontSize: 40 }}>
+            {icon}
+          </span>
+          <div>
+            <h4 className={`font-headline-sm text-headline-sm ${textClass}`}>{title}</h4>
+          </div>
+        </div>
+
+        {/* Cara Trasera */}
+        <div 
+          className={`absolute inset-0 w-full h-full bento-card ${
+            isDark ? 'bg-primary text-white' : 'bg-white text-primary'
+          } p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)]`}
+        >
+          <p className="font-body-md text-body-md leading-relaxed">
+            {description}
+          </p>
+          <span className={`text-xs font-semibold self-end uppercase ${isDark ? 'text-industrial-orange' : 'text-secondary'}`}>
+            Clic para Volver
+          </span>
+        </div>
       </div>
     </div>
   );
