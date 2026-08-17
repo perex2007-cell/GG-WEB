@@ -31,6 +31,22 @@ const services = [
     textClass: 'text-primary',
     description: 'Exploración geotécnica y ensayos de laboratorio para cimentaciones seguras.'
   },
+  {
+    title: 'Remodelaciones y Refuerzos',
+    icon: 'home_repair_service',
+    variant: 'bg-white',
+    textClass: 'text-primary',
+    borderClass: 'border border-outline-variant',
+    description: 'Adecuación de espacios, reforzamiento de estructuras y mantenimiento locativo.'
+  },
+  {
+    title: 'Presupuestos y Cantidades',
+    icon: 'calculate',
+    variant: 'bg-white',
+    border: 'industrial-border',
+    textClass: 'text-primary',
+    description: 'Elaboración de APUs, cómputos métricos y programación detallada de obra.'
+  }
 ];
 
 const sstServices = [
@@ -65,27 +81,40 @@ const sstServices = [
     borderClass: 'border border-outline-variant',
     description: 'Formación especializada a trabajadores en prevención de riesgos laborales.'
   },
+  {
+    title: 'Planes de Emergencia',
+    icon: 'emergency',
+    variant: 'bg-white',
+    border: 'industrial-border',
+    textClass: 'text-primary',
+    description: 'Elaboración de planes de evacuación, análisis de vulnerabilidad y brigadas.'
+  },
+  {
+    title: 'Investigación de Accidentes',
+    icon: 'search',
+    variant: 'bg-surface-container-high',
+    textClass: 'text-primary',
+    description: 'Análisis de causas raíz e implementación de medidas correctivas para el personal.'
+  }
 ];
 
 function ServiceCard({ title, icon, variant, textClass, border, borderClass, description }) {
   const [isFlipped, setIsFlipped] = useState(false);
-
-  // Definimos colores traseros acordes a si la tarjeta es oscura (bg-primary) o clara
   const isDark = variant === 'bg-primary';
 
   return (
     <div 
-      className="h-48 cursor-pointer [perspective:1000px]"
-      onClick={() => setIsFlipped(!isFlipped)}
+      className="h-48 cursor-pointer [perspective:1000px] select-none"
+      onClick={() => setIsFlipped((prev) => !prev)}
     >
       <div 
-        className={`relative w-full h-full duration-500 [transform-style:preserve-3d] transition-transform ${
+        className={`relative w-full h-full duration-500 ease-in-out [transform-style:preserve-3d] transition-transform ${
           isFlipped ? '[transform:rotateY(180deg)]' : ''
         }`}
       >
         {/* Cara Frontal */}
         <div 
-          className={`absolute inset-0 w-full h-full bento-card ${variant} p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between [backface-visibility:hidden] group`}
+          className={`absolute inset-0 w-full h-full bento-card ${variant} p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between [backface-visibility:hidden] [-webkit-backface-visibility:hidden] group`}
         >
           <span className={`material-symbols-outlined ${textClass} group-hover:scale-110 transition-transform`} style={{ fontSize: 40 }}>
             {icon}
@@ -99,13 +128,13 @@ function ServiceCard({ title, icon, variant, textClass, border, borderClass, des
         <div 
           className={`absolute inset-0 w-full h-full bento-card ${
             isDark ? 'bg-primary text-white' : 'bg-white text-primary'
-          } p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between [backface-visibility:hidden] [transform:rotateY(180deg)]`}
+          } p-md rounded-xl shadow-sm ${border || ''} ${borderClass || ''} flex flex-col justify-between [backface-visibility:hidden] [-webkit-backface-visibility:hidden] [transform:rotateY(180deg)]`}
         >
-          <p className="font-body-md text-body-md leading-relaxed">
+          <p className="font-body-md text-body-md leading-relaxed text-xs sm:text-sm">
             {description}
           </p>
-          <span className={`text-xs font-semibold self-end uppercase ${isDark ? 'text-industrial-orange' : 'text-secondary'}`}>
-            Clic para Volver
+          <span className={`text-[10px] font-semibold self-end uppercase tracking-wider ${isDark ? 'text-industrial-orange' : 'text-secondary'}`}>
+            Clic para volver
           </span>
         </div>
       </div>
